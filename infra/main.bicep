@@ -3,21 +3,21 @@ targetScope = 'subscription'
 @minLength(1)
 @maxLength(64)
 @description('Name of the environment that can be used as part of naming resource convention')
-param environmentName string
+param name string
 
 @minLength(1)
 @description('Primary location for all resources')
 param location string
 
-// Tags that should be applied to all resources.
+
 var tags = {
-  'azd-env-name': environmentName
+  'azd-env-name': name
 }
 
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+var resourceToken = toLower(uniqueString(subscription().id, name, location))
 
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  name: 'rg-${environmentName}'
+  name: 'rg-${name}'
   location: location
   tags: tags
 }

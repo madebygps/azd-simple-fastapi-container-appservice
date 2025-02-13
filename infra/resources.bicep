@@ -20,7 +20,7 @@ module appServicePlan 'core/host/appservice-plan.bicep' = {
     location: location
     tags: tags
     sku: {
-      name: 'B1'
+      name: 'F1'
     }
   }
 }
@@ -35,7 +35,7 @@ module api 'core/host/appservice.bicep' = {
     })
     appServicePlanId: appServicePlan.outputs.id
     containerRegistryName: acr.outputs.name
-    containerRegistryImageName: 'fastapi'  // Make sure this matches
+    containerRegistryImageName: 'fastapi'
     containerRegistryImageTag: 'latest'
   }
 }
