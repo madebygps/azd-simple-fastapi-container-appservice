@@ -1,0 +1,16 @@
+name: simple-fastapi-container-appservice
+metadata:
+  template: simple-fastapi-container-appservice@0.0.1-beta
+services:
+  api:
+    project: ./src
+    language: py
+    host: appservice
+    hooks:
+      predeploy:
+        shell: sh
+        run: |
+          az acr login -n ${AZURE_CONTAINER_REGISTRY_NAME}
+          docker build --platform linux/amd64 -t fastapi:latest .
+          docker tag fastapi:latest ${AZURE_CONTAINER_REGISTRY_ENDPOINT}/fastapi:latest
+          docker push ${AZURE_CONTAINER_REGISTRY_ENDPOINT}/fastapi:latest
