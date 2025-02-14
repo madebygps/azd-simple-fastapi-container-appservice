@@ -2,22 +2,19 @@ targetScope = 'subscription'
 
 @minLength(1)
 @maxLength(64)
-@description('Name of the environment that can be used as part of naming resource convention')
+@description('Name which is used to generate a short unique hash for each resource')
 param name string
 
 @minLength(1)
 @description('Primary location for all resources')
 param location string
 
-
-var tags = {
-  'azd-env-name': name
-}
-
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
+var prefix = '${name}-${resourceToken}'
+var tags = { 'azd-env-name': name }
 
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  name: 'rg-${name}'
+  name: '${name}-rg'
   location: location
   tags: tags
 }
@@ -28,7 +25,9 @@ module resources 'resources.bicep' = {
   params: {
     location: location
     tags: tags
-    resourceToken: resourceToken
+    containerRegistryName: '${replace(prefix, '-', '')}registry'
+    appServiceName: replace('${take(prefix,19)}-app', '--', '-')
+    appServicePlanName: replace('${take(prefix,19)}-plan', '--', '-')
   }
 }
 

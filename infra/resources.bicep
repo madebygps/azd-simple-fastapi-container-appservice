@@ -1,13 +1,24 @@
 targetScope = 'resourceGroup'
 
+@description('The Azure region for resource deployment')
 param location string
+
+@description('Resource tags that should be applied to all resources')
 param tags object
-param resourceToken string
+
+@description('Name of the container registry')
+param containerRegistryName string
+
+@description('Name of the app service')
+param appServiceName string
+
+@description('Name of the app service plan')
+param appServicePlanName string
 
 module acr 'core/container-registry.bicep' = {
   name: 'acr'
   params: {
-    name: 'acr${resourceToken}'
+    name: containerRegistryName
     location: location
     tags: tags
   }
@@ -16,7 +27,7 @@ module acr 'core/container-registry.bicep' = {
 module appServicePlan 'core/host/appservice-plan.bicep' = {
   name: 'appservice-plan'
   params: {
-    name: 'plan-${resourceToken}'
+    name: appServicePlanName
     location: location
     tags: tags
     sku: {
@@ -28,7 +39,7 @@ module appServicePlan 'core/host/appservice-plan.bicep' = {
 module api 'core/host/appservice.bicep' = {
   name: 'api'
   params: {
-    name: 'app-api-${resourceToken}'
+    name: appServiceName
     location: location
     tags: union(tags, {
       'azd-service-name': 'api'
