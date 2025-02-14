@@ -29,7 +29,9 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' e
 resource webApp 'Microsoft.Web/sites@2022-09-01' = {
   name: name
   location: location
-  tags: tags
+  tags: union(tags, {
+    'azd-service-name': 'api'
+  })
   identity: {
     type: 'SystemAssigned'
   }
