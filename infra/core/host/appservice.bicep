@@ -21,12 +21,19 @@ param containerRegistryImageName string
 @description('Tag of the container image')
 param containerRegistryImageTag string
 
+@description('The Application Insights connection string')
+param applicationInsightsConnectionString string
+
+@description('The Application Insights instrumentation key')
+param applicationInsightsInstrumentationKey string
+
+
 // Get reference to ACR
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
 }
 
-resource webApp 'Microsoft.Web/sites@2022-09-01' = {
+resource appService 'Microsoft.Web/sites@2022-09-01' = {
   name: name
   location: location
   tags: union(tags, {
@@ -46,20 +53,28 @@ resource webApp 'Microsoft.Web/sites@2022-09-01' = {
           name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
           value: 'false'
         }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: applicationInsightsConnectionString
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_INSTRUMENTATION_KEY'
+          value: applicationInsightsInstrumentationKey
+        }
       ]
     }
   }
 }
 
 // Now use the registry-access module for RBAC
-module registryAccess '../security/registry_access.bicep' = {
+module registryAccess '../security/registry-access.bicep' = {
   name: 'registry-access'
   params: {
     containerRegistryName: containerRegistryName
-    principalId: webApp.identity.principalId
+    principalId: appService.identity.principalId
   }
 }
 
-output name string = webApp.name
-output principalId string = webApp.identity.principalId
-output uri string = 'https://${webApp.properties.defaultHostName}'
+output name string = appService.name
+output principalId string = appService.identity.principalId
+output uri string = 'https://${appService.properties.defaultHostName}'

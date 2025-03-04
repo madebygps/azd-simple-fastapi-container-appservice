@@ -10,7 +10,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' e
   name: containerRegistryName
 }
 
-resource aksAcrPull 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource acrPullRoleAssign 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: containerRegistry
   name: guid(subscription().id, resourceGroup().id, principalId, acrPullRole)
   properties: {

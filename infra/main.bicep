@@ -28,6 +28,9 @@ module resources 'resources.bicep' = {
     containerRegistryName: '${replace(prefix, '-', '')}registry'
     appServiceName: replace('${take(prefix,19)}-app', '--', '-')
     appServicePlanName: replace('${take(prefix,19)}-plan', '--', '-')
+    applicationInsightsName: replace('${take(prefix,19)}-ai', '--', '-')
+    logAnalyticsName: replace('${take(prefix,19)}-la', '--', '-')
+
   }
 }
 

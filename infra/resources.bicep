@@ -15,7 +15,13 @@ param appServiceName string
 @description('Name of the app service plan')
 param appServicePlanName string
 
-module acr 'core/container-registry.bicep' = {
+@description('Name of the application insights instance')
+param applicationInsightsName string
+
+@description('Name of the log analytics workspace')
+param logAnalyticsName string
+
+module containerRegistry 'core/host/container-registry.bicep' = {
   name: 'acr'
   params: {
     name: containerRegistryName
@@ -35,6 +41,24 @@ module appServicePlan 'core/host/appservice-plan.bicep' = {
     }
   }
 }
+module logAnalytics 'core/monitor/log-analytics.bicep' = {
+  name: 'logAnalytics'
+  params: {
+    name: logAnalyticsName
+    location: location
+    tags: tags
+  }
+}
+
+module applicationInsights 'core/monitor/application-insights.bicep' = {
+  name: 'applicationInsights'
+  params: {
+    name: applicationInsightsName
+    workspaceResourceId: logAnalytics.outputs.id
+    location: location
+    tags: tags
+  }
+}
 
 module api 'core/host/appservice.bicep' = {
   name: 'api'
@@ -45,12 +69,14 @@ module api 'core/host/appservice.bicep' = {
       'azd-service-name': 'api'
     })
     appServicePlanId: appServicePlan.outputs.id
-    containerRegistryName: acr.outputs.name
+    containerRegistryName: containerRegistry.outputs.name
     containerRegistryImageName: 'fastapi'
     containerRegistryImageTag: 'latest'
+    applicationInsightsConnectionString: applicationInsights.outputs.connectionString 
+    applicationInsightsInstrumentationKey: applicationInsights.outputs.instrumentationKey 
   }
 }
 
-output acrName string = acr.outputs.name
-output acrLoginServer string = acr.outputs.loginServer
+output acrName string = containerRegistry.outputs.name
+output acrLoginServer string = containerRegistry.outputs.loginServer
 output apiUri string = api.outputs.uri
