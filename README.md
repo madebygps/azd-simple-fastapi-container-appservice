@@ -1,21 +1,4 @@
----
-page_type: sample
-languages:
-- azdeveloper
-- python
-- bicep
-- html
-products:
-- azure
-- azure-app-service
-- azure-container-registry
-- azure-application-insights
-urlFragment: azure-simple-fastapi-container-appservice
-name: Deploy a containerized FastAPI Application on Azure App Service (Python)
-description: A template to deploy a containerized Python FastAPI web application to Azure App Service using Azure Container Registry.
----
-
-# Simple FastAPI Container AZD Template
+# Simple FastAPI Container on App Service AZD Template
 
 A containerized FastAPI application template ready for Azure App Service deployment with container support.
 
