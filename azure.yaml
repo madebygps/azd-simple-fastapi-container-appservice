@@ -8,9 +8,17 @@ services:
     host: appservice
     hooks:
       predeploy:
-        shell: sh
-        run: |
-          az acr login -n ${AZURE_CONTAINER_REGISTRY_NAME}
-          docker build --platform linux/amd64 -t fastapi:latest .
-          docker tag fastapi:latest ${AZURE_CONTAINER_REGISTRY_ENDPOINT}/fastapi:latest
-          docker push ${AZURE_CONTAINER_REGISTRY_ENDPOINT}/fastapi:latest
+        windows:
+          shell: pwsh
+          run: |
+            az acr login -n $env:AZURE_CONTAINER_REGISTRY_NAME
+            docker build --platform linux/amd64 -t fastapi:latest .
+            docker tag fastapi:latest $env:AZURE_CONTAINER_REGISTRY_ENDPOINT/fastapi:latest
+            docker push $env:AZURE_CONTAINER_REGISTRY_ENDPOINT/fastapi:latest
+        posix:
+          shell: sh
+          run: |
+            az acr login -n ${AZURE_CONTAINER_REGISTRY_NAME}
+            docker build --platform linux/amd64 -t fastapi:latest .
+            docker tag fastapi:latest ${AZURE_CONTAINER_REGISTRY_ENDPOINT}/fastapi:latest
+            docker push ${AZURE_CONTAINER_REGISTRY_ENDPOINT}/fastapi:latest

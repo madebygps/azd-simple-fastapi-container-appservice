@@ -19,23 +19,37 @@ This template provisions the following Azure resources:
 ### Prerequisites
 
 1. [Create a free Azure account](https://azure.microsoft.com/free/) if you don't have one
-2. Install the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd) (azd)
+2. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) on your local machine
+3. Install the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
+4. Install the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd) (azd)
 
 ### Deploy the Application
 
-1. Authenticate with Azure:
+1. Clone and initialize the template:
+
+    ```bash
+    azd init -t madebygps/azd-simple-fastapi-container-appservice
+    ```
+
+2. Sign in to Azure:
+
+    ```bash
+    az login
+    ```
+
+3. Authenticate with Azure Developer CLI:
 
     ```bash
     azd auth login
     ```
 
-2. Provision and deploy the resources:
+4. Provision and deploy the resources:
 
     ```bash
     azd up
     ```
 
-3. Once deployment completes, you'll receive an endpoint URL.
+5. Once deployment completes, you'll receive an endpoint URL.
 
 ### Making Changes
 
