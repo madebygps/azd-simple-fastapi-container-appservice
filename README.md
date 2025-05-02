@@ -25,31 +25,33 @@ This template provisions the following Azure resources:
 
 ### Deploy the Application
 
+1. Make sure Docker is running
+
 1. Clone and initialize the template:
 
     ```bash
     azd init -t madebygps/azd-simple-fastapi-container-appservice
     ```
 
-2. Sign in to Azure:
+1. Sign in to Azure:
 
     ```bash
     az login
     ```
 
-3. Authenticate with Azure Developer CLI:
+1. Authenticate with Azure Developer CLI:
 
     ```bash
     azd auth login
     ```
 
-4. Provision and deploy the resources:
+1. Provision and deploy the resources:
 
     ```bash
     azd up
     ```
 
-5. Once deployment completes, you'll receive an endpoint URL.
+1. Once deployment completes, you'll receive an endpoint URL.
 
 ### Making Changes
 
